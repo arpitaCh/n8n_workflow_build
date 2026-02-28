@@ -1,0 +1,133 @@
+{
+  "name": "ExamChallenge1",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a Senior QA Engineer with 10 years of experience in Functional Testing\n\nWhen a user provides an error log from application monitoring system , please generate bug report in automated way. generate bug report in this format : Title m serverity , steps to reproduce , expected vS actual result and output the result.\n\n🚫 use Only the log data provided . mark unknown as unknown\n\n\n\n## 🎯 Example of Proper Output Structure\nTITLE  : \"\"\n Severity: \"\"\n\nEXPECTED:\"\"\n\nactual:\"\" "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -192,
+        -160
+      ],
+      "id": "c6d3365d-cc35-4eae-8b5e-bb2b92a41b6b",
+      "name": "AI Agent",
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "public": true,
+        "availableInChat": true,
+        "agentName": "AI Agent",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -544,
+        -160
+      ],
+      "id": "be021cd0-a7de-436f-960e-98f66cf6c1a5",
+      "name": "When chat message received",
+      "webhookId": "e2ce02db-9215-461e-9a14-9b46a6e4a918",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        80
+      ],
+      "id": "1b536eaf-fff4-45d7-afb4-bcfcf9a01d2a",
+      "name": "Brain",
+      "credentials": {
+        "groqApi": {
+          "id": "bOQ4dyUvXmq9fe8B",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "issueKey": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Issue_Key', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.jiraTool",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        112
+      ],
+      "id": "a3933864-df79-463a-84ed-e991ddd1330f",
+      "name": "Read Jira",
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "2CERxC3fimaj4W0F",
+          "name": "Jira SW Cloud account 2"
+        }
+      },
+      "disabled": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Brain": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Jira": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "953ee02e-821f-403c-9b11-4064a537fb10",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dae45a91f2049649720478eea07e466796f5121c54090aaf7c87710069e2d4f5"
+  },
+  "id": "88UogtzBxhbK4PRN",
+  "tags": []
+}
